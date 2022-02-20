@@ -3,6 +3,26 @@ POST http://localhost:8085/auth
 
 ###
 
+POST http://localhost:8085/auth/signup/
+content-type: application/json
+
+{
+    "login":          "dont_you_dare",
+    "password": "asd"
+}
+
+###
+
+POST http://localhost:8085/auth/signin/
+
+{
+    "login":          "dont_you_dare",
+    "password": "asd"
+}
+
+
+###
+
 # GET http://localhost:8082/items
 
 

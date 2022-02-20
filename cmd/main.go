@@ -25,6 +25,9 @@ type Server struct {
 	httpServer *http.Server
 }
 
+// TODO вынести модели на уровень модуля
+// TODO создать структуру ответа\ошибки
+
 func main() {
 	logger, _ := zap.NewProduction()
 
@@ -54,9 +57,7 @@ func main() {
 		zap.L().Sugar().Fatal(err.Error())
 	}
 
-	fmt.Println(db)
-
-	repos := repository.NewRepository()
+	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 	g := initRoutes(handlers)
@@ -86,7 +87,6 @@ func initRoutes(routes *handler.Handler) *gin.Engine {
 	g := gin.New()
 	g.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
 	routes.InitRoutes(g)
-
 	return g
 }
 
