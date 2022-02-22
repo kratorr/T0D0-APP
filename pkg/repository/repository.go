@@ -10,7 +10,7 @@ type Auth interface {
 	CreateUser(models.User) error
 	Authenticate(models.User) (string, error)
 	GetUser(string) (models.User, error)
-	CreateToken(models.User) (string, error)
+	SaveToken(models.User, string) error
 }
 
 type Repository struct {

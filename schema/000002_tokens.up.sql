@@ -1,15 +1,6 @@
 CREATE TABLE tokens (
-   id SERIAL PRIMARY KEY,
    user_id INT REFERENCES users (id),
-   token 
-);
+   token VARCHAR(255),
+   expiration_date TIMESTAMP
 
-
-
-
-CREATE TABLE todo_lists (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users (id),
-    title VARCHAR NOT NULL,
-    description TEXT
 );

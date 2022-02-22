@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
 	"todo/models"
 
@@ -30,7 +29,7 @@ func (r *AuthPostgres) CreateUser(u models.User) error {
 
 	defer rows.Close()
 
-	fmt.Println(r.GenerateBearerToken())
+	// fmt.Println(r.GenerateBearerToken())
 
 	return nil
 }
@@ -39,35 +38,36 @@ func (r *AuthPostgres) Authenticate(u models.User) (string, error) {
 	return "", nil
 }
 
-func (r *AuthPostgres) GetUser(ID string) (models.User, error) {
+func (r *AuthPostgres) GetUser(Login string) (models.User, error) {
 	var u models.User
-
+	// TODO а что если юзера с таким логином нет?
 	query := `SELECT id, login, password FROM users WHERE login = ($1)`
 
-	err := r.db.QueryRow(context.Background(), query, ID).Scan(&u.ID, &u.Login, &u.Password)
+	err := r.db.QueryRow(context.Background(), query, Login).Scan(&u.ID, &u.Login, &u.Password)
 	if err != nil {
 		zap.L().Sugar().Error(err.Error())
 
 		return u, err
 	}
-	zap.L().Sugar().Info("login ", u.Login, "pass hash ", u.Password)
+
+	fmt.Println(u.ID)
+
+	zap.L().Sugar().Info("ID", u.ID, "login ", u.Login, "pass hash ", u.Password)
 
 	return u, nil
 }
 
-func (r *AuthPostgres) CreateToken(u models.User) (string, error) {
-	return r.GenerateBearerToken(), nil
-}
+func (r *AuthPostgres) SaveToken(u models.User, token string) error {
+	expirationDate := time.Now().AddDate(0, 0, 5)
+	query := `INSERT INTO tokens (user_id, token, expiration_date) VALUES($1, $2, $3);`
+	rows, err := r.db.Query(context.Background(), query, u.ID, token, expirationDate)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
 
-func (r *AuthPostgres) GenerateBearerToken() string {
-	rand.Seed(time.Now().UnixNano())
-
-	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-	b := make([]rune, 40)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		return err
 	}
 
-	return string(b)
+	defer rows.Close()
+
+	return nil
 }
