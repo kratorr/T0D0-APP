@@ -7,8 +7,8 @@ POST http://localhost:8085/auth/signup/
 content-type: application/json
 
 {
-    "login":          "dont_you_dare",
-    "password": "asd"
+    "login": "dsadaddsda",
+    "password": "q"
 }
 
 ###
@@ -16,135 +16,23 @@ content-type: application/json
 POST http://localhost:8085/auth/signin/
 
 {
-    "login":          "dont_you_dare",
-    "password": "asd"
+    "login": "avannit",
+    "password": "q"
 }
+
+###
+
+GET http://localhost:8085/api/v1/test/
+Authorization: eKLYpjBHQztuEfaoLNzPtHoUNHFarRAsDGagYfrF
+
+###
 
 
 ###
 
+GET http://localhost:8085/api/v1/test/
+
+
 # GET http://localhost:8082/items
 
 
-# ###
-
-# GET http://localhost:8082/items?limit=5&offset=4
-
-
-# ### BAD limit value
-
-# GET http://localhost:8082/users?offset=2&limit=dsadaa
-
-
-# ###
-
-# GET http://localhost:8082/items/1
-
-
-# ### GOD CASE   auto increment primary key игнорируется при вставке
-
-# PUT http://localhost:8082/items/
-# content-type: application/json
-
-# {
-#     "id":          42,
-#     "title":       "db_crud",
-#     "description": "123"
-# }
-
-# ###
-
-# PUT http://localhost:8082/items/
-# content-type: application/json
-
-# {
-#     "id":          42,
-#     "title":       "db_crud",
-#     "description": "xxxxx",
-#     "x": 1
-# }
-
-
-# ###
-
-# DELETE http://localhost:8082/items/2
-
-
-# ###
-
-# POST http://localhost:8082/items/3
-# content-type: application/json
-
-# {
-#     "description": "xаписать программу db_crudxxxx"
-# }
-
-# ###
-
-# POST http://localhost:8082/items/3
-# content-type: application/json
-
-# {
-#     "description": "xаписать программу db_crudxxx2122x",
-#     "updated": "test"
-# }
-
-# ###
-
-# POST http://localhost:8082/items/3
-# content-type: application/json
-
-# {
-#    "title": 42
-# }
-
-
-# ###
-
-# POST http://localhost:8082/items/3
-# content-type: application/json
-
-# {
-#    "id": 42
-# }
-
-
-# ###
-
-# GET http://localhost:8082/users/1
-
-
-# ###
-
-# PUT http://localhost:8082/users/
-# content-type: application/json
-
-# {
-#     "user_id":    2,
-#     "login":      "qwerty'",
-#     "password":   "love\"",
-#     "unkn_field": "love"
-# }
-
-
-
-# ###
-
-# POST http://localhost:8082/items/3
-# content-type: application/json
-
-# {
-#         "updated": null
-# }
-
-# ###
-
-# GET http://localhost:8082/users/?limit=1'&offset=1\"",
-# content-type: application/json
-
-
-# ###
-
-
-# GET http://localhost:8082/users/",
-# content-type: application/json

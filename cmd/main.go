@@ -57,6 +57,7 @@ func main() {
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
+
 	g := initRoutes(handlers)
 	server := new(Server)
 

@@ -41,7 +41,7 @@ func (s *AuthService) SignUp(user models.User) error {
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 1)
 	if err != nil {
 		return errors.New("Error create user")
-	} // TODO validate files, shit password etc.
+	} // TODO validate files, shit password etc. Задачка вроде изян, пока на паузе.
 
 	user.Password = string(passwordHash)
 
@@ -79,6 +79,10 @@ func (s *AuthService) GetUser(Login string) (models.User, error) {
 	return s.repo.GetUser(Login)
 }
 
+func (s *AuthService) GetUserByToken(token string) (models.User, error) {
+	return s.repo.GetUserByToken(token)
+}
+
 func (s *AuthService) CreateToken() string {
 	rand.Seed(time.Now().UnixNano())
 
@@ -90,8 +94,4 @@ func (s *AuthService) CreateToken() string {
 	}
 
 	return string(b)
-}
-
-func (s *AuthService) GetUserByToken(token string) (models.User, error) {
-	return s.repo.GetUserByToken(token)
 }
