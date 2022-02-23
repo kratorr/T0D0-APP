@@ -37,6 +37,5 @@ func NewPostgresDB(config PostgresConfig) (*pgx.Conn, error) {
 	// 	os.Exit(1)
 	// }
 
-	// fmt.Println(name, weight)
 	return conn, nil
 }

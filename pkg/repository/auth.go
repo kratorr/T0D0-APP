@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"time"
 	"todo/models"
 
@@ -29,13 +28,7 @@ func (r *AuthPostgres) CreateUser(u models.User) error {
 
 	defer rows.Close()
 
-	// fmt.Println(r.GenerateBearerToken())
-
 	return nil
-}
-
-func (r *AuthPostgres) Authenticate(u models.User) (string, error) {
-	return "", nil
 }
 
 func (r *AuthPostgres) GetUser(Login string) (models.User, error) {
@@ -49,8 +42,6 @@ func (r *AuthPostgres) GetUser(Login string) (models.User, error) {
 
 		return u, err
 	}
-
-	fmt.Println(u.ID)
 
 	zap.L().Sugar().Info("ID", u.ID, "login ", u.Login, "pass hash ", u.Password)
 
@@ -70,4 +61,21 @@ func (r *AuthPostgres) SaveToken(u models.User, token string) error {
 	defer rows.Close()
 
 	return nil
+}
+
+func (r *AuthPostgres) GetUserByToken(token string) (models.User, error) {
+	query := `SELECT  u.id, u.login FROM users as u
+			  JOIN tokens as t ON t.user_id = u.id
+			  WHERE t.token = $1
+			  LIMIT 1`
+
+	var u models.User
+	err := r.db.QueryRow(context.Background(), query, token).Scan(&u.ID, &u.Login)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+
+		return u, err
+	}
+
+	return u, nil
 }

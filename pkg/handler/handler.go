@@ -22,6 +22,10 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 	auth.POST("/signup", h.SignUp)
 	auth.POST("/signin", h.SignIn)
 
+	api := g.Group("/api/v1")
+	api.Use(h.UserIdentification)
+	api.GET("/test", h.Test)
+
 	//	g.POST("/auth", h.auth)
 	// g.GET("/i", h.i)
 	// g.POST("/upload_template", h.i, h.uploadTemplate)

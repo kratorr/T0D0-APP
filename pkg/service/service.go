@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"time"
 	"todo/models"
@@ -14,8 +13,8 @@ import (
 type Auth interface {
 	SignUp(models.User) error
 	SignIn(models.User) (string, error)
-	GetUser(ID string) (models.User, error)
-	// CreateToken(models.User) (string, error)
+	GetUser(login string) (models.User, error)
+	GetUserByToken(token string) (models.User, error)
 }
 
 type Service struct {
@@ -38,15 +37,15 @@ func NewService(repos *repository.Repository) *Service {
 	}
 }
 
-func (s *AuthService) SignUp(u models.User) error {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 1)
+func (s *AuthService) SignUp(user models.User) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 1)
 	if err != nil {
-		return errors.New("error") // TODO здесь ошибку понятную
+		return errors.New("Error create user")
 	} // TODO validate files, shit password etc.
 
-	u.Password = string(passwordHash)
+	user.Password = string(passwordHash)
 
-	err = s.repo.CreateUser(u)
+	err = s.repo.CreateUser(user)
 	if err != nil {
 		return errors.New("DB error")
 	}
@@ -54,21 +53,20 @@ func (s *AuthService) SignUp(u models.User) error {
 	return nil
 }
 
-func (s *AuthService) SignIn(u models.User) (string, error) {
-	user, err := s.repo.GetUser(u.Login) // user from DB
+func (s *AuthService) SignIn(user models.User) (string, error) {
+	userDB, err := s.repo.GetUser(user.Login) // user from DB
 	if err != nil {
 		return "", errors.New("User not found")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(u.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password))
 	if err != nil {
-		fmt.Println(err)
 		return "", errors.New("Password or login is shit")
 	}
 
 	token := s.CreateToken()
 
-	err = s.repo.SaveToken(user, token)
+	err = s.repo.SaveToken(userDB, token)
 
 	if err != nil {
 		return "", errors.New("Error save token")
@@ -77,8 +75,8 @@ func (s *AuthService) SignIn(u models.User) (string, error) {
 	return token, nil
 }
 
-func (s *AuthService) GetUser(ID string) (models.User, error) {
-	return s.repo.GetUser(ID)
+func (s *AuthService) GetUser(Login string) (models.User, error) {
+	return s.repo.GetUser(Login)
 }
 
 func (s *AuthService) CreateToken() string {
@@ -92,4 +90,8 @@ func (s *AuthService) CreateToken() string {
 	}
 
 	return string(b)
+}
+
+func (s *AuthService) GetUserByToken(token string) (models.User, error) {
+	return s.repo.GetUserByToken(token)
 }

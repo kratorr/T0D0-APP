@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -38,8 +37,6 @@ func main() {
 
 	// config, err :=
 	config.InitConfig()
-	fmt.Println(viper.ConfigFileUsed())
-	fmt.Println(viper.GetString("postgres_host"))
 
 	// if err != nil {
 	//		zap.L().Sugar().Error("config error", err.Error())/

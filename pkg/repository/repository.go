@@ -8,9 +8,9 @@ import (
 
 type Auth interface {
 	CreateUser(models.User) error
-	Authenticate(models.User) (string, error)
-	GetUser(string) (models.User, error)
+	GetUser(login string) (models.User, error)
 	SaveToken(models.User, string) error
+	GetUserByToken(token string) (models.User, error)
 }
 
 type Repository struct {
