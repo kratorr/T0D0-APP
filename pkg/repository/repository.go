@@ -1,24 +1,24 @@
 package repository
 
+import (
+	"todo/models"
+
+	"github.com/jackc/pgx/v4"
+)
+
 type Auth interface {
-	CreateUser() error
-	Authenticate() error
+	CreateUser(models.User) error
+	GetUser(login string) (models.User, error)
+	SaveToken(models.User, string) error
+	GetUserByToken(token string) (models.User, error)
 }
 
 type Repository struct {
 	Auth
 }
 
-func NewRepository() *Repository {
+func NewRepository(db *pgx.Conn) *Repository {
 	return &Repository{
-		Auth: NewAuthPostgres(), // DB connection as param
+		Auth: NewAuthPostgres(db), // DB connection as param
 	}
 }
-
-// type ReceiverListPostgres struct {
-// 	db *pgxpool.Pool
-// }
-
-// func NewReceiverListPostgres(db *pgxpool.Pool) *ReceiverListPostgres {
-// 	return &ReceiverListPostgres{db: db}
-// }

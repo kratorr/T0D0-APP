@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -25,6 +24,9 @@ type Server struct {
 	httpServer *http.Server
 }
 
+// TODO вынести модели на уровень модуля
+// TODO создать структуру ответа\ошибки
+
 func main() {
 	logger, _ := zap.NewProduction()
 
@@ -35,8 +37,6 @@ func main() {
 
 	// config, err :=
 	config.InitConfig()
-	fmt.Println(viper.ConfigFileUsed())
-	fmt.Println(viper.GetString("postgres_host"))
 
 	// if err != nil {
 	//		zap.L().Sugar().Error("config error", err.Error())/
@@ -54,11 +54,10 @@ func main() {
 		zap.L().Sugar().Fatal(err.Error())
 	}
 
-	fmt.Println(db)
-
-	repos := repository.NewRepository()
+	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
+
 	g := initRoutes(handlers)
 	server := new(Server)
 
@@ -86,7 +85,6 @@ func initRoutes(routes *handler.Handler) *gin.Engine {
 	g := gin.New()
 	g.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
 	routes.InitRoutes(g)
-
 	return g
 }
 
