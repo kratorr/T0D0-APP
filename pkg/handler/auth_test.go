@@ -6,21 +6,27 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
 	"todo/pkg/service"
-	"todo/pkg/service/mocks"
+	"todo/pkg/service/mock"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
+// 	"github.com/stretchr/testify/mock"
 func TestSignUpHandler(t *testing.T) {
 	t.Run("Register valid user", func(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 		router := gin.Default()
+		ctrl := gomock.NewController(t)
 		rr := httptest.NewRecorder()
-		mockAuthService := new(mocks.Auth)
-		mockAuthService.On("SignUp", mock.AnythingOfType("User")).Return(nil)
+		// mockAuthService := new(mock.Auth)
+		mockAuthService := mock.NewMockAuth(ctrl)
+		// mockAuthService.EXPECT().SignUp().Return(nil)
+		// mockAuthService.On("SignUp", mock.AnythingOfType("User")).Return(nil)
+
 		services := &service.Service{mockAuthService}
 		handlers := NewHandler(services)
 
@@ -38,7 +44,8 @@ func TestSignUpHandler(t *testing.T) {
 		router.ServeHTTP(rr, request)
 
 		assert.Equal(t, 200, rr.Code)
-		mockAuthService.AssertNotCalled(t, "SignUp")
+		// mockAuthService.AssertNotCalled(t, "SignUp")
+		//	mockAuthService.E
 	})
 
 	// t.Run("Already created user 400 bad request", func(t *testing.T) {})
