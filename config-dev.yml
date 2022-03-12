@@ -1,0 +1,6 @@
+postgres_host: '127.0.0.1'
+postgres_port: 5432
+postgres_db_name: 'postgres'
+postgres_username: 'postgres'
+postgres_password: 'qwerty'
+postgres_sslmode: 'disabled'
