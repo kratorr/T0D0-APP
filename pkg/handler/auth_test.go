@@ -3,9 +3,10 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
+	"strings"
 	"testing"
 
 	"todo/models"
@@ -18,49 +19,77 @@ import (
 )
 
 // 	"github.com/stretchr/testify/mock"
-func TestSignUpHandler(t *testing.T) {
-	t.Run("Empty login or password", func(t *testing.T) {
-		gin.SetMode(gin.TestMode)
 
-		router := gin.Default()
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+type args struct{}
 
-		rr := httptest.NewRecorder()
-		fmt.Println(rr)
+func TestSignUpUser(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	tests := []struct {
+		name           string
+		args           args
+		beforeTest     func(SignUp *mock.MockAuth)
+		body           map[string]interface{}
+		wantStatusCode int
+		wantHeader     http.Header
+		wantBody       string
+	}{
+		{
+			name: "Create valid user",
+			beforeTest: func(SignUp *mock.MockAuth) {
+				SignUp.EXPECT().SignUp(
+					models.User{
+						Password: "test_password",
+						Login:    "test_login",
+					},
+				).Return(nil)
+			},
+			body:           map[string]interface{}{"login": "test_login", "password": "test_password"},
+			wantStatusCode: 200,
+			wantHeader:     http.Header{"Content-Type": {"application/json; charset=utf-8"}},
+			wantBody:       `{"response":"user created"}`,
+		},
+	}
 
-		mockAuthService := mock.NewMockAuth(ctrl)
+	for _, tcase := range tests {
+		t.Run(tcase.name, func(t *testing.T) {
+			gin.SetMode(gin.TestMode)
+			router := gin.Default()
+			mockAuthService := mock.NewMockAuth(ctrl)
 
-		userInput := models.User{
-			Login:    "test",
-			Password: "test",
-		}
+			rr := httptest.NewRecorder()
 
-		mockAuthService.EXPECT().SignUp(userInput).Return(nil)
+			services := &service.Service{mockAuthService}
+			handlers := NewHandler(services)
 
-		// mockAuthService.EXPECT().SignUp(u).Return(nil)
-		// SignUp(models.User) error
-		// mockAuthService.On("SignUp", mock.AnythingOfType("User")).Return(nil)
+			handlers.InitRoutes(router)
 
-		services := &service.Service{mockAuthService}
-		handlers := NewHandler(services)
+			if tcase.beforeTest != nil {
+				tcase.beforeTest(mockAuthService)
+			}
+			reqBody, err := json.Marshal(tcase.body)
 
-		handlers.InitRoutes(router)
+			assert.NoError(t, err)
+			request, err := http.NewRequest(http.MethodPost, "/auth/signup", bytes.NewBuffer(reqBody))
+			assert.NoError(t, err)
 
-		reqBody, err := json.Marshal(gin.H{
-			"login":    "test",
-			"password": "test",
+			router.ServeHTTP(rr, request)
+
+			if !reflect.DeepEqual(rr.Result().StatusCode, tcase.wantStatusCode) {
+				t.Errorf("SignUp() = %v, want %v", rr.Result().StatusCode, tcase.wantStatusCode)
+			}
+
+			// if !reflect.DeepEqual(rr.Header, tcase.wantHeader) {
+			// 	t.Errorf("SignUp() = %v, want %v", rr.Header(), tcase.wantHeader)
+			// }
+
+			bodyBuffer := new(bytes.Buffer)
+			bodyBuffer.ReadFrom(rr.Body)
+			body := strings.TrimSpace(bodyBuffer.String())
+
+			if !reflect.DeepEqual(body, tcase.wantBody) {
+				t.Errorf("SignUp() = %s, want %s", bodyBuffer.String(), tcase.wantBody)
+			}
 		})
-		assert.NoError(t, err)
-		request, err := http.NewRequest(http.MethodPost, "/auth/signup", bytes.NewBuffer(reqBody))
-		assert.NoError(t, err)
-
-		request.Header.Set("Content-Type", "application/json")
-
-		router.ServeHTTP(rr, request)
-
-		assert.Equal(t, 400, rr.Code)
-	})
-
-	// t.Run("Already created user 400 bad request", func(t *testing.T) {})
+	}
 }
