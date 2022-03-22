@@ -48,8 +48,8 @@ func TestSignUpHandler(t *testing.T) {
 		handlers.InitRoutes(router)
 
 		reqBody, err := json.Marshal(gin.H{
-			"login":    "",
-			"password": "",
+			"login":    "test",
+			"password": "test",
 		})
 		assert.NoError(t, err)
 		request, err := http.NewRequest(http.MethodPost, "/auth/signup", bytes.NewBuffer(reqBody))
@@ -60,9 +60,6 @@ func TestSignUpHandler(t *testing.T) {
 		router.ServeHTTP(rr, request)
 
 		assert.Equal(t, 400, rr.Code)
-
-		// mockAuthService.AssertNotCalled(t, "SignUp")
-		//	mockAuthService.E
 	})
 
 	// t.Run("Already created user 400 bad request", func(t *testing.T) {})
