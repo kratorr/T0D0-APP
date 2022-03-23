@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math/rand"
 	"time"
+
 	"todo/models"
 	"todo/pkg/repository"
 
@@ -28,9 +29,9 @@ func (s *AuthService) SignUp(user models.User) error {
 
 	user.Password = string(passwordHash)
 
-	err = s.repo.CreateUser(user)
+	_, err = s.repo.CreateUser(user)
 	if err != nil {
-		return errors.New("DB error")
+		return errors.New(err.Error())
 	}
 
 	return nil
