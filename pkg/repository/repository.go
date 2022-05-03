@@ -13,12 +13,22 @@ type Auth interface {
 	GetUserByToken(token string) (models.User, error)
 }
 
+type TodoList interface {
+	Create(userID int) error
+	Delete(userID int) error
+	Update(userID int) error
+	GetByID(userID int, ID int) error
+	GetAll(userID int) error
+}
+
 type Repository struct {
 	Auth
+	TodoList
 }
 
 func NewRepository(db *pgx.Conn) *Repository {
 	return &Repository{
-		Auth: NewAuthPostgres(db), // DB connection as param
+		Auth:     NewAuthPostgres(db), // DB connection as param
+		TodoList: NewTodoListPostgres(db),
 	}
 }

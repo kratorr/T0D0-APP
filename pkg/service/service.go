@@ -12,12 +12,24 @@ type Auth interface {
 	GetUserByToken(token string) (models.User, error)
 }
 
+type TodoList interface {
+	Create(userID int) error
+	Delete(userID int) error
+	Update(userID int) error
+	GetByID(userID int, ID int) error
+	GetAll(userID int) error
+}
+
+type todoElement interface{}
+
 type Service struct {
 	Auth
+	TodoList
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Auth: NewAuthService(repos.Auth),
+		Auth:     NewAuthService(repos.Auth),
+		TodoList: NewTodoListService(repos.TodoList),
 	}
 }
