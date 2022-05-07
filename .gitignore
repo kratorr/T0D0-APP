@@ -2,3 +2,6 @@ config.yml
 schema.png
 tmp/
 .vscode/
+cover.html
+cover.out
+http_collection.http
