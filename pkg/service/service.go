@@ -13,14 +13,20 @@ type Auth interface {
 }
 
 type TodoList interface {
-	Create(userID int) error
+	Create(userID int, input models.TodoList) (int, error)
+	Delete(userID int, listID int) error
+	Update(userID int, input models.TodoList) (int, error)
+	GetByID(userID int, ID int) (models.TodoList, error)
+	GetAll(userID int) ([]models.TodoList, error)
+}
+
+type TodoElement interface {
+	Create(userID int, listID int) error // input insert
 	Delete(userID int) error
 	Update(userID int) error
 	GetByID(userID int, ID int) error
 	GetAll(userID int) error
 }
-
-type todoElement interface{}
 
 type Service struct {
 	Auth

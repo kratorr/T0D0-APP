@@ -44,5 +44,6 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoElement.DELETE("/:id")
 		todoElement.PUT("/:id")
 	}
+
 	return g
 }

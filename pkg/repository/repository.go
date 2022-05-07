@@ -14,7 +14,7 @@ type Auth interface {
 }
 
 type TodoList interface {
-	Create(userID int) error
+	Create(userID int, input models.TodoList) (int, error)
 	Delete(userID int) error
 	Update(userID int) error
 	GetByID(userID int, ID int) error
