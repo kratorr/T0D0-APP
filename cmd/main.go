@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
 	"todo/pkg/config"
 	"todo/pkg/handler"
 	"todo/pkg/repository"
@@ -28,7 +29,7 @@ type Server struct {
 // TODO создать структуру ответа\ошибки
 
 func main() {
-	logger, _ := zap.NewProduction()
+	logger, _ := zap.NewDevelopment()
 
 	defer logger.Sync()
 
@@ -50,6 +51,7 @@ func main() {
 		DBname:   viper.GetString("postgres_dbname"),
 		SSLMode:  viper.GetString("postgres_sslmode"),
 	})
+	// efer db.Close() потом разобраться с закрытием подключения
 	if err != nil {
 		zap.L().Sugar().Fatal(err.Error())
 	}
