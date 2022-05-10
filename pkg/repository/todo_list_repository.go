@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
-	"strings"
 
 	"todo/models"
 
@@ -27,18 +25,22 @@ func (r *TodoListPostgres) Create(userID int, input models.TodoList) (int, error
 	if err != nil {
 
 		zap.L().Sugar().Error(err.Error())
-
-		if strings.Contains(err.Error(), "duplicate key") {
-			return todoListId, errors.New("user already exists")
-		}
-
 		return todoListId, err
 	}
 
 	return todoListId, nil
 }
 
-func (r *TodoListPostgres) Delete(userID int) error {
+func (r *TodoListPostgres) Delete(userID, listID int) error {
+	query := `DELETE FROM todo_lists WHERE user_id = $1 and id = $2 `
+	_, err := r.db.Exec(context.Background(), query, userID, listID)
+	if err != nil {
+
+		zap.L().Sugar().Error(err.Error())
+
+		return err
+	}
+
 	return nil
 }
 
@@ -52,4 +54,18 @@ func (r *TodoListPostgres) GetAll(userID int) error {
 
 func (r *TodoListPostgres) GetByID(userID, id int) error {
 	return nil
+}
+
+func (r *TodoListPostgres) GetOwnerID(listID int) (int, error) {
+	var ownerID int
+
+	query := `SELECT user_id FROM todo_lists WHERE id = $1 ;`
+	err := r.db.QueryRow(context.Background(), query, listID).Scan(&ownerID)
+	if err != nil {
+
+		zap.L().Sugar().Error(err.Error())
+		return ownerID, err
+	}
+
+	return ownerID, nil
 }

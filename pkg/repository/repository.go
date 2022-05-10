@@ -15,10 +15,11 @@ type Auth interface {
 
 type TodoList interface {
 	Create(userID int, input models.TodoList) (int, error)
-	Delete(userID int) error
+	Delete(userID, listID int) error
 	Update(userID int) error
 	GetByID(userID int, ID int) error
 	GetAll(userID int) error
+	GetOwnerID(listID int) (int, error)
 }
 
 type Repository struct {

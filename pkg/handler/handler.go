@@ -29,6 +29,7 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 	api.GET("/test", h.Test)
 
 	todoLists := api.Group("/todo_list")
+
 	{
 		todoLists.GET("/", h.getAllTodoLists)
 		todoLists.POST("/", h.createTodoList)

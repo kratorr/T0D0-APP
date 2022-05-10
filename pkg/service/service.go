@@ -18,6 +18,7 @@ type TodoList interface {
 	Update(userID int, input models.TodoList) (int, error)
 	GetByID(userID int, ID int) (models.TodoList, error)
 	GetAll(userID int) ([]models.TodoList, error)
+	GetOwnerID(listID int) (int, error)
 }
 
 type TodoElement interface {
