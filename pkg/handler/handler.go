@@ -40,14 +40,17 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoLists.GET("/:id", h.getTodoList)
 		todoLists.DELETE("/:id", h.deleteTodoList)
 		todoLists.PUT("/:id", h.updateTodoList)
+
+		todoLists.POST(":id/todo", h.createTodoElement) // create todo elemnt
 	}
 
 	todoElement := api.Group("/todo")
 	{
-		todoElement.POST("/")
-		todoElement.GET("/:id")
-		todoElement.DELETE("/:id")
-		todoElement.PUT("/:id")
+		todoElement.GET("/", h.getTodoElementsByList)
+		// todoElement.POST("/", h.createTodoElement)
+		// todoElement.GET("/:id", h.getTodoElement)
+		// todoElement.DELETE("/:id", h.deleteTodoElement)
+		// todoElement.PUT("/:id", h.updateTodoElement)
 	}
 
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

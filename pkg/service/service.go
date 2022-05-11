@@ -22,21 +22,23 @@ type TodoList interface {
 }
 
 type TodoElement interface {
-	Create(userID int, listID int) error // input insert
-	Delete(userID int) error
-	Update(userID int) error
-	GetByID(userID int, ID int) error
-	GetAll(userID int) error
+	Create(userID int, input models.TodoElement) (int, error) // input insert
+	// Delete(userID int) error
+	//	Update(userID int) error
+	// GetByID(userID int, ID int) error
+	//	GetAll(userID int) error
 }
 
 type Service struct {
 	Auth
 	TodoList
+	TodoElement
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Auth:     NewAuthService(repos.Auth),
-		TodoList: NewTodoListService(repos.TodoList),
+		Auth:        NewAuthService(repos.Auth),
+		TodoList:    NewTodoListService(repos.TodoList),
+		TodoElement: NewTodoElementService(repos.TodoElement),
 	}
 }

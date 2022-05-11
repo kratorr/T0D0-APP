@@ -17,7 +17,7 @@ func (h *Handler) createTodoList(c *gin.Context) {
 	inputData := models.TodoList{}
 	err := c.ShouldBindJSON(&inputData)
 	if err != nil {
-		fmt.Println(err)
+		zap.L().Sugar().Error(err.Error())
 		return
 	}
 	zap.L().Sugar().Debug("create TODO list ", userID, inputData)
@@ -106,7 +106,7 @@ func (h *Handler) getAllTodoLists(c *gin.Context) {
 	if err != nil {
 		fmt.Println("todoList")
 	}
-
+	fmt.Println(todoLists)
 	c.JSON(http.StatusOK, todoLists)
 }
 
