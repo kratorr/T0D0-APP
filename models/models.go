@@ -7,13 +7,13 @@ type User struct {
 }
 
 type TodoList struct {
-	ID          int `json:"id"`
-	UserID      int
+	ID          int    `json:"id"`
+	UserID      int    `json:"user_id"`
 	Title       string `json:"title" binding:"required"`
 	Description string `json:"description" binding:"required"`
 }
 
-// type TodoItem struct {
+// type TodoElement struct {
 // 	Title       string `json:"title" binding:"required"`
 
 // }

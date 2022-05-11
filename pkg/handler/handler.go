@@ -3,7 +3,11 @@ package handler
 import (
 	"todo/pkg/service"
 
+	_ "todo/docs"
+
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 type Handler struct {
@@ -45,6 +49,8 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoElement.DELETE("/:id")
 		todoElement.PUT("/:id")
 	}
+
+	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return g
 }

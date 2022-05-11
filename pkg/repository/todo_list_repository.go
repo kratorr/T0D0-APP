@@ -86,6 +86,7 @@ func (r *TodoListPostgres) GetByID(userID, listID int) (models.TodoList, error) 
 	err := r.db.QueryRow(context.Background(), query, userID, listID).Scan(&result.ID, &result.UserID, &result.Title, &result.Description)
 	if err != nil {
 		zap.L().Sugar().Error(err.Error())
+
 		return result, err
 	}
 
