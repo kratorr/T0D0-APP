@@ -23,18 +23,16 @@ func (s *TodoListService) Delete(userID int, listID int) error {
 	return s.repo.Delete(userID, listID)
 }
 
-func (s *TodoListService) Update(userID int, input models.TodoList) (int, error) {
-	return 0, nil
+func (s *TodoListService) Update(userID, listID int, input models.TodoList) error {
+	return s.repo.Update(userID, listID, input)
 }
 
 func (s *TodoListService) GetAll(userID int) ([]models.TodoList, error) {
-	res := []models.TodoList{}
-	return res, nil
+	return s.repo.GetAll(userID)
 }
 
-func (s *TodoListService) GetByID(userID, id int) (models.TodoList, error) {
-	res := models.TodoList{}
-	return res, nil
+func (s *TodoListService) GetByID(userID, listID int) (models.TodoList, error) {
+	return s.repo.GetByID(userID, listID)
 }
 
 func (s *TodoListService) GetOwnerID(listID int) (int, error) {

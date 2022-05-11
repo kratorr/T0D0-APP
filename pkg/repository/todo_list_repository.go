@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"todo/models"
 
@@ -44,16 +45,51 @@ func (r *TodoListPostgres) Delete(userID, listID int) error {
 	return nil
 }
 
-func (r *TodoListPostgres) Update(userID int) error {
+func (r *TodoListPostgres) Update(userID, listID int, input models.TodoList) error {
+	fmt.Println(listID, userID, input)
+	query := `UPDATE todo_lists SET title = $1, description  = $2 WHERE id = $3 and user_id = $4`
+	_, err := r.db.Exec(context.Background(), query, input.Title, input.Description, listID, userID)
+	if err != nil {
+
+		zap.L().Sugar().Error(err.Error())
+
+		return err
+	}
 	return nil
 }
 
-func (r *TodoListPostgres) GetAll(userID int) error {
-	return nil
+func (r *TodoListPostgres) GetAll(userID int) ([]models.TodoList, error) {
+	result := make([]models.TodoList, 0)
+
+	query := `SELECT id, user_id, title, description FROM todo_lists WHERE user_id = $1;`
+	rows, err := r.db.Query(context.Background(), query, userID)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+		return result, err
+	}
+
+	for rows.Next() {
+		todoList := models.TodoList{}
+		err := rows.Scan(&todoList.ID, &todoList.UserID, &todoList.Title, &todoList.Description)
+		if err != nil {
+			fmt.Println(err)
+		}
+		result = append(result, todoList)
+	}
+
+	return result, nil
 }
 
-func (r *TodoListPostgres) GetByID(userID, id int) error {
-	return nil
+func (r *TodoListPostgres) GetByID(userID, listID int) (models.TodoList, error) {
+	result := models.TodoList{}
+	query := `SELECT id, user_id, title, description FROM todo_lists WHERE user_id = $1 and id = $2 ;`
+	err := r.db.QueryRow(context.Background(), query, userID, listID).Scan(&result.ID, &result.UserID, &result.Title, &result.Description)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+		return result, err
+	}
+
+	return result, nil
 }
 
 func (r *TodoListPostgres) GetOwnerID(listID int) (int, error) {
