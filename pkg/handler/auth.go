@@ -2,11 +2,21 @@ package handler
 
 import (
 	"net/http"
+
 	"todo/models"
 
 	"github.com/gin-gonic/gin"
 )
 
+// SignUp godoc
+// @Summary      SignUp new user
+// @Description  SignUp new user
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        user  body      models.User  true  "Add account"
+// @Router       /auth/signup/ [post]
+// @Success      200 {string}  string    "ok"
 func (h *Handler) SignUp(c *gin.Context) {
 	var r models.User
 	if err := c.ShouldBindJSON(&r); err != nil {

@@ -1,13 +1,8 @@
 package service
 
 import (
-	"errors"
-	"math/rand"
-	"time"
 	"todo/models"
 	"todo/pkg/repository"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Auth interface {
@@ -17,81 +12,33 @@ type Auth interface {
 	GetUserByToken(token string) (models.User, error)
 }
 
+type TodoList interface {
+	Create(userID int, input models.TodoList) (int, error)
+	Delete(userID int, listID int) error
+	Update(userID, listID int, input models.TodoList) error
+	GetByID(userID int, listID int) (models.TodoList, error)
+	GetAll(userID int) ([]models.TodoList, error)
+	GetOwnerID(listID int) (int, error)
+}
+
+type TodoElement interface {
+	Create(userID int, input models.TodoElement) (int, error) // input insert
+	// Delete(userID int) error
+	//	Update(userID int) error
+	// GetByID(userID int, ID int) error
+	//	GetAll(userID int) error
+}
+
 type Service struct {
 	Auth
-}
-
-type AuthService struct {
-	repo repository.Auth
-}
-
-func NewAuthService(repo repository.Auth) *AuthService {
-	return &AuthService{
-		repo: repo,
-	}
+	TodoList
+	TodoElement
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Auth: NewAuthService(repos.Auth),
+		Auth:        NewAuthService(repos.Auth),
+		TodoList:    NewTodoListService(repos.TodoList),
+		TodoElement: NewTodoElementService(repos.TodoElement),
 	}
-}
-
-func (s *AuthService) SignUp(user models.User) error {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 1)
-	if err != nil {
-		return errors.New("Error create user")
-	} // TODO validate files, shit password etc. Задачка вроде изян, пока на паузе.
-
-	user.Password = string(passwordHash)
-
-	err = s.repo.CreateUser(user)
-	if err != nil {
-		return errors.New("DB error")
-	}
-
-	return nil
-}
-
-func (s *AuthService) SignIn(user models.User) (string, error) {
-	userDB, err := s.repo.GetUser(user.Login) // user from DB
-	if err != nil {
-		return "", errors.New("User not found")
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password))
-	if err != nil {
-		return "", errors.New("Password or login is shit")
-	}
-
-	token := s.CreateToken()
-
-	err = s.repo.SaveToken(userDB, token)
-
-	if err != nil {
-		return "", errors.New("Error save token")
-	}
-
-	return token, nil
-}
-
-func (s *AuthService) GetUser(Login string) (models.User, error) {
-	return s.repo.GetUser(Login)
-}
-
-func (s *AuthService) GetUserByToken(token string) (models.User, error) {
-	return s.repo.GetUserByToken(token)
-}
-
-func (s *AuthService) CreateToken() string {
-	rand.Seed(time.Now().UnixNano())
-
-	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-	b := make([]rune, 40)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-
-	return string(b)
 }

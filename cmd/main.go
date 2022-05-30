@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
 	"todo/pkg/config"
 	"todo/pkg/handler"
 	"todo/pkg/repository"
@@ -18,6 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	// swagger embed files
 )
 
 type Server struct {
@@ -27,8 +29,24 @@ type Server struct {
 // TODO вынести модели на уровень модуля
 // TODO создать структуру ответа\ошибки
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8005
+// @BasePath  /api/v1
+
+// @securityDefinitions.basic  BasicAuth
 func main() {
-	logger, _ := zap.NewProduction()
+	logger, _ := zap.NewDevelopment()
 
 	defer logger.Sync()
 
@@ -50,6 +68,7 @@ func main() {
 		DBname:   viper.GetString("postgres_dbname"),
 		SSLMode:  viper.GetString("postgres_sslmode"),
 	})
+	// efer db.Close() потом разобраться с закрытием подключения
 	if err != nil {
 		zap.L().Sugar().Fatal(err.Error())
 	}

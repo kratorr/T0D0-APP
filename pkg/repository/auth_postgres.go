@@ -2,7 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
+	"strings"
 	"time"
+
 	"todo/models"
 
 	"github.com/jackc/pgx/v4"
@@ -17,26 +20,29 @@ func NewAuthPostgres(db *pgx.Conn) *AuthPostgres {
 	return &AuthPostgres{db: db}
 }
 
-func (r *AuthPostgres) CreateUser(u models.User) error {
-	query := `INSERT INTO users (login, password) VALUES($1, $2);`
-	rows, err := r.db.Query(context.Background(), query, u.Login, u.Password)
+func (r *AuthPostgres) CreateUser(u models.User) (models.User, error) {
+	query := `INSERT INTO users (login, password) VALUES($1, $2) RETURNING id;;`
+	err := r.db.QueryRow(context.Background(), query, u.Login, u.Password).Scan(&u.ID)
 	if err != nil {
+
 		zap.L().Sugar().Error(err.Error())
 
-		return err
-	} // TODO сраная ошибка должна быть что user already exists. !!!
+		if strings.Contains(err.Error(), "duplicate key") {
+			return u, errors.New("user already exists")
+		}
 
-	defer rows.Close()
+		return u, err
+	}
 
-	return nil
+	return u, nil
 }
 
-func (r *AuthPostgres) GetUser(Login string) (models.User, error) {
+func (r *AuthPostgres) GetUser(login string) (models.User, error) {
 	var u models.User
 	// TODO а что если юзера с таким логином нет?
 	query := `SELECT id, login, password FROM users WHERE login = ($1)`
 
-	err := r.db.QueryRow(context.Background(), query, Login).Scan(&u.ID, &u.Login, &u.Password)
+	err := r.db.QueryRow(context.Background(), query, login).Scan(&u.ID, &u.Login, &u.Password)
 	if err != nil {
 		zap.L().Sugar().Error(err.Error())
 
