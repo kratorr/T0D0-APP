@@ -18,7 +18,7 @@ CREATE TABLE todo_lists (
 );
 
 
-CREATE TABLE todos (
+CREATE TABLE todo_element (
     id SERIAL PRIMARY KEY,
     todo_list_id INT REFERENCES todo_lists (id),
     title VARCHAR NOT NULL

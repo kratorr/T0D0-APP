@@ -1,0 +1,1 @@
+ALTER TABLE todo_element ADD COLUMN state_id INT REFERENCES states DEFAULT 1;

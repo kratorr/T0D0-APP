@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS todos;
+DROP TABLE IF EXISTS todo_element;
 
 DROP TABLE IF EXISTS todo_lists;
 
