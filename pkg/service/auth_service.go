@@ -21,13 +21,18 @@ type AuthService struct {
 	repo repository.Auth
 }
 
-func (s *AuthService) SignUp(user models.User) error {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 1)
+func (s *AuthService) SignUp(userDto models.CreateUserDTO) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(userDto.Password), 1)
 	if err != nil {
-		return errors.New("Error create user")
+		return errors.New("error create user")
 	} // TODO validate files, shit password etc. Задачка вроде изян, пока на паузе.
 
-	user.Password = string(passwordHash)
+	userDto.Password = string(passwordHash)
+
+	user := models.User{
+		Login:    userDto.Login,
+		Password: userDto.Password,
+	}
 
 	_, err = s.repo.CreateUser(user)
 	if err != nil {
@@ -40,12 +45,12 @@ func (s *AuthService) SignUp(user models.User) error {
 func (s *AuthService) SignIn(user models.User) (string, error) {
 	userDB, err := s.repo.GetUser(user.Login) // user from DB
 	if err != nil {
-		return "", errors.New("User not found")
+		return "", errors.New("user not found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password))
 	if err != nil {
-		return "", errors.New("Password or login is shit")
+		return "", errors.New("authentication failed")
 	}
 
 	token := s.CreateToken()
@@ -53,14 +58,14 @@ func (s *AuthService) SignIn(user models.User) (string, error) {
 	err = s.repo.SaveToken(userDB, token)
 
 	if err != nil {
-		return "", errors.New("Error save token")
+		return "", errors.New("error save token")
 	}
 
 	return token, nil
 }
 
-func (s *AuthService) GetUser(Login string) (models.User, error) {
-	return s.repo.GetUser(Login)
+func (s *AuthService) GetUser(login string) (models.User, error) {
+	return s.repo.GetUser(login)
 }
 
 func (s *AuthService) GetUserByToken(token string) (models.User, error) {

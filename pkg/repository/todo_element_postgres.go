@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"fmt"
+
+	"todo/models"
+
 	"github.com/jackc/pgx/v4"
 	"go.uber.org/zap"
-	"todo/models"
 )
 
 type TodoElementPostgres struct {
@@ -52,7 +54,7 @@ func (r *TodoElementPostgres) Update(elementID int, input models.TodoElement) er
 
 func (r *TodoElementPostgres) GetAllByListID(listID int) ([]models.TodoElement, error) {
 	result := make([]models.TodoElement, 0)
-
+	userID := 1
 	query := `SELECT id, todo_list_id, title, state_id FROM todo_elemnt WHERE id = $1;`
 	rows, err := r.db.Query(context.Background(), query, userID)
 	if err != nil {
@@ -61,12 +63,12 @@ func (r *TodoElementPostgres) GetAllByListID(listID int) ([]models.TodoElement, 
 	}
 
 	for rows.Next() {
-		todoElemnt := models.TodoElement{}
-		err := rows.Scan(&todoList.ID, &todoList.UserID, &todoList.Title, &todoList.Description)
+		todoElement := models.TodoElement{}
+		err := rows.Scan(&todoElement.ID, &todoElement.Title)
 		if err != nil {
 			fmt.Println(err)
 		}
-		result = append(result, todoList)
+		result = append(result, todoElement)
 	}
 
 	return result, nil

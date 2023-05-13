@@ -2,8 +2,9 @@ POST http://localhost:8085/auth/signup/
 content-type: application/json
 
 {
-    "login": "uscm",
-    "password": "123"
+    "login": "VsTHeO",
+    "password": "123",
+    "password_repeat": "123"
 }
 
 ###

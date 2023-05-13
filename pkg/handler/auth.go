@@ -18,18 +18,18 @@ import (
 // @Router       /auth/signup/ [post]
 // @Success      200 {string}  string    "ok"
 func (h *Handler) SignUp(c *gin.Context) {
-	var r models.User
-	if err := c.ShouldBindJSON(&r); err != nil {
+	var userDto models.CreateUserDTO
+	if err := c.ShouldBindJSON(&userDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := h.services.Auth.SignUp(r)
+	err := h.services.Auth.SignUp(userDto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": "user created"})
+	c.JSON(http.StatusCreated, gin.H{"response": "user created"})
 }
 
 func (h *Handler) SignIn(c *gin.Context) {

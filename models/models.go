@@ -1,5 +1,16 @@
 package models
 
+type CreateUserDTO struct {
+	Login          string `json:"login" binding:"required"`
+	Password       string `json:"password" binding:"required"`
+	PasswordRepeat string `json:"password_repeat" binding:"required"`
+}
+
+type SignInUserDTO struct {
+	Login    string `json:"login" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 type User struct {
 	ID       int    `json:"-"`
 	Login    string `json:"login" binding:"required"`

@@ -6,7 +6,7 @@ import (
 )
 
 type Auth interface {
-	SignUp(models.User) error
+	SignUp(models.CreateUserDTO) error
 	SignIn(models.User) (string, error)
 	GetUser(login string) (models.User, error)
 	GetUserByToken(token string) (models.User, error)
