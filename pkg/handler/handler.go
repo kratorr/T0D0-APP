@@ -11,12 +11,14 @@ import (
 )
 
 type Handler struct {
-	services *service.Service
+	services  *service.Service
+	secretKey string
 }
 
-func NewHandler(services *service.Service) *Handler {
+func NewHandler(services *service.Service, secretKey string) *Handler {
 	return &Handler{
-		services: services,
+		services:  services,
+		secretKey: secretKey,
 	}
 }
 
@@ -25,12 +27,12 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 	{
 		auth.POST("/signup", h.SignUp)
 		auth.POST("/signin", h.SignIn)
+		auth.GET("/me", h.UserIdentification, h.Me)
 		// auth.POST("/signout", h.SignOut)
 	}
 	api := g.Group("/api/v1")
 
 	api.Use(h.UserIdentification)
-	api.GET("/test", h.Test)
 
 	todoLists := api.Group("/todo_list")
 
@@ -45,12 +47,12 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoLists.DELETE(":id/todo/:elemid", h.deleteTodoElement)
 	}
 
-	//todoElement := api.Group("/todo")
+	// todoElement := api.Group("/todo")
 	{
 		// todoElement.GET("/", h.getTodoElementsByList)
 		// todoElement.POST("/", h.createTodoElement)
 		// todoElement.GET("/:id", h.getTodoElement)
-		//todoElement.DELETE("/:id", h.deleteTodoElement)
+		// todoElement.DELETE("/:id", h.deleteTodoElement)
 		// todoElement.PUT("/:id", h.updateTodoElement)
 	}
 

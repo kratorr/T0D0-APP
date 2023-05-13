@@ -7,7 +7,7 @@ import (
 
 type Auth interface {
 	SignUp(models.CreateUserDTO) error
-	SignIn(models.User) (string, error)
+	SignIn(models.SignInUserDTO) (string, error)
 	GetUser(login string) (models.User, error)
 	GetUserByToken(token string) (models.User, error)
 }
@@ -34,9 +34,9 @@ type Service struct {
 	TodoElement
 }
 
-func NewService(repos *repository.Repository) *Service {
+func NewService(repos *repository.Repository, secretKey string) *Service {
 	return &Service{
-		Auth:        NewAuthService(repos.Auth),
+		Auth:        NewAuthService(repos.Auth, secretKey),
 		TodoList:    NewTodoListService(repos.TodoList),
 		TodoElement: NewTodoElementService(repos.TodoElement),
 	}

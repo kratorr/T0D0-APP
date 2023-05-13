@@ -2,7 +2,7 @@ POST http://localhost:8085/auth/signup/
 content-type: application/json
 
 {
-    "login": "VsTHeO",
+    "login": "hgf",
     "password": "123",
     "password_repeat": "123"
 }
@@ -12,7 +12,7 @@ content-type: application/json
 POST http://localhost:8085/auth/signin/
 
 {
-    "login": "uscm",
+    "login": "VsTHeO",
     "password": "123"
 }
 

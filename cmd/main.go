@@ -74,8 +74,8 @@ func main() {
 	}
 
 	repos := repository.NewRepository(db)
-	services := service.NewService(repos)
-	handlers := handler.NewHandler(services)
+	services := service.NewService(repos, viper.GetString("secret_key"))
+	handlers := handler.NewHandler(services, viper.GetString("secret_key"))
 
 	g := initRoutes(handlers)
 	server := new(Server)
@@ -92,7 +92,6 @@ func main() {
 	zap.L().Sugar().Info("Shutdown server")
 	if err := server.Shutdown(context.Background()); err != nil {
 		zap.L().Sugar().Error("Error stop server: %s", err.Error())
-
 	}
 }
 

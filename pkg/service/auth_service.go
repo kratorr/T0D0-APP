@@ -2,23 +2,26 @@ package service
 
 import (
 	"errors"
-	"math/rand"
+	"fmt"
 	"time"
 
 	"todo/models"
 	"todo/pkg/repository"
 
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewAuthService(repo repository.Auth) *AuthService {
+func NewAuthService(repo repository.Auth, secretKey string) *AuthService {
 	return &AuthService{
-		repo: repo,
+		repo:      repo,
+		secretKey: secretKey,
 	}
 }
 
 type AuthService struct {
-	repo repository.Auth
+	repo      repository.Auth
+	secretKey string
 }
 
 func (s *AuthService) SignUp(userDto models.CreateUserDTO) error {
@@ -42,26 +45,33 @@ func (s *AuthService) SignUp(userDto models.CreateUserDTO) error {
 	return nil
 }
 
-func (s *AuthService) SignIn(user models.User) (string, error) {
-	userDB, err := s.repo.GetUser(user.Login) // user from DB
+func (s *AuthService) SignIn(userInput models.SignInUserDTO) (string, error) {
+	user, err := s.repo.GetUser(userInput.Login) // user from DB
 	if err != nil {
 		return "", errors.New("user not found")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userInput.Password))
+
 	if err != nil {
 		return "", errors.New("authentication failed")
 	}
 
-	token := s.CreateToken()
-
-	err = s.repo.SaveToken(userDB, token)
-
-	if err != nil {
-		return "", errors.New("error save token")
+	payload := jwt.MapClaims{
+		"sub":      user.ID,
+		"nickname": user.Login,
+		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	}
 
-	return token, nil
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+
+	t, err := token.SignedString([]byte(s.secretKey))
+	if err != nil {
+		fmt.Println("error jwt signing", err)
+		return "", errors.New("error jwt signing")
+	}
+
+	return t, nil
 }
 
 func (s *AuthService) GetUser(login string) (models.User, error) {
@@ -73,14 +83,5 @@ func (s *AuthService) GetUserByToken(token string) (models.User, error) {
 }
 
 func (s *AuthService) CreateToken() string {
-	rand.Seed(time.Now().UnixNano())
-
-	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-	b := make([]rune, 40)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-
-	return string(b)
+	return ""
 }

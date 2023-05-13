@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"todo/models"
@@ -33,13 +34,13 @@ func (h *Handler) SignUp(c *gin.Context) {
 }
 
 func (h *Handler) SignIn(c *gin.Context) {
-	var r models.User
-	if err := c.ShouldBindJSON(&r); err != nil {
+	var signInUserDto models.SignInUserDTO
+	if err := c.ShouldBindJSON(&signInUserDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	token, err := h.services.Auth.SignIn(r)
+	token, err := h.services.Auth.SignIn(signInUserDto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -48,8 +49,11 @@ func (h *Handler) SignIn(c *gin.Context) {
 	c.JSON(200, gin.H{"Token": token})
 }
 
-func (h *Handler) Test(c *gin.Context) {
-	c.JSON(200, gin.H{"test": "test"})
+func (h *Handler) Me(c *gin.Context) {
+	userID := c.Value("userID")
+	userLogin := c.Value("userLogin")
+	fmt.Println(userLogin)
+	c.JSON(200, gin.H{"userID": userID, "userLogin": userLogin})
 }
 
-// TODO SignOut epta!!!
+// TODO SignOut
