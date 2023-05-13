@@ -92,6 +92,7 @@ func main() {
 	zap.L().Sugar().Info("Shutdown server")
 	if err := server.Shutdown(context.Background()); err != nil {
 		zap.L().Sugar().Error("Error stop server: %s", err.Error())
+
 	}
 }
 

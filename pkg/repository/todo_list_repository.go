@@ -50,9 +50,7 @@ func (r *TodoListPostgres) Update(userID, listID int, input models.TodoList) err
 	query := `UPDATE todo_lists SET title = $1, description  = $2 WHERE id = $3 and user_id = $4`
 	_, err := r.db.Exec(context.Background(), query, input.Title, input.Description, listID, userID)
 	if err != nil {
-
 		zap.L().Sugar().Error(err.Error())
-
 		return err
 	}
 	return nil

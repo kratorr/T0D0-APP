@@ -23,10 +23,9 @@ type TodoList interface {
 
 type TodoElement interface {
 	Create(userID int, input models.TodoElement) (int, error) // input insert
-	// Delete(userID int) error
-	//	Update(userID int) error
-	// GetByID(userID int, ID int) error
-	//	GetAll(userID int) error
+	Delete(elementID int) error
+	Update(userID int, input models.TodoElement) error
+	GetAll(listID int) ([]models.TodoElement, error)
 }
 
 type Service struct {

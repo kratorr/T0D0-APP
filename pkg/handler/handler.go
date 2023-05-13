@@ -41,15 +41,16 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoLists.DELETE("/:id", h.deleteTodoList)
 		todoLists.PUT("/:id", h.updateTodoList)
 
-		todoLists.POST(":id/todo", h.createTodoElement) // create todo elemnt
+		todoLists.POST(":id/todo", h.createTodoElement) // create todo element
+		todoLists.DELETE(":id/todo/:elemid", h.deleteTodoElement)
 	}
 
-	todoElement := api.Group("/todo")
+	//todoElement := api.Group("/todo")
 	{
-		todoElement.GET("/", h.getTodoElementsByList)
+		// todoElement.GET("/", h.getTodoElementsByList)
 		// todoElement.POST("/", h.createTodoElement)
 		// todoElement.GET("/:id", h.getTodoElement)
-		// todoElement.DELETE("/:id", h.deleteTodoElement)
+		//todoElement.DELETE("/:id", h.deleteTodoElement)
 		// todoElement.PUT("/:id", h.updateTodoElement)
 	}
 
@@ -57,3 +58,5 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 
 	return g
 }
+
+//{"todoll_list":5 , "titl": "go to shop"}

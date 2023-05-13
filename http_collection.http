@@ -1,14 +1,9 @@
-POST http://localhost:8085/auth
-
-
-###
-
 POST http://localhost:8085/auth/signup/
 content-type: application/json
 
 {
-    "login": "Offkozz",
-    "password": "qa"
+    "login": "uscm",
+    "password": "123"
 }
 
 ###
@@ -16,8 +11,8 @@ content-type: application/json
 POST http://localhost:8085/auth/signin/
 
 {
-    "login": "Offkozz",
-    "password": "qa"
+    "login": "uscm",
+    "password": "123"
 }
 
 ###
@@ -27,12 +22,64 @@ Authorization: BtJcTrcoPvkZyGkPkLwisSRcdQVYvGrqrkJfLFOT
 
 ###
 
-
-###
-
 GET http://localhost:8085/api/v1/test/
-
 
 # GET http://localhost:8082/items
 
+###
 
+POST http://localhost:8085/api/v1/todo_list/
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+{
+    "title": "TEST2",
+    "description": "TEST2"
+}
+
+###
+
+DELETE http://localhost:8085/api/v1/todo_list/5
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+
+###
+
+PUT http://localhost:8085/api/v1/todo_list/10
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+{
+    "title": "TEST4",
+    "description": "dasdsadd"
+}
+
+###
+
+
+GET http://localhost:8085/api/v1/todo_list/
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+###
+
+GET http://localhost:8085/api/v1/todo_list/10
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+###
+
+POST http://localhost:8085/api/v1/todo_list/10/todo/
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json
+
+{
+    "title": "Cходить в qwerty"
+}
+
+###
+
+DELETE http://localhost:8085/api/v1/todo_list/10/todo/3
+Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+content-type: application/json

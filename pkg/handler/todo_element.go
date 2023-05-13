@@ -33,7 +33,9 @@ func (h *Handler) createTodoElement(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"ID": todoElementID})
+
 }
 
 func (h *Handler) getTodoElement(c *gin.Context) {
@@ -41,7 +43,24 @@ func (h *Handler) getTodoElement(c *gin.Context) {
 }
 
 func (h *Handler) deleteTodoElement(c *gin.Context) {
-	fmt.Println("deleteTodoElement")
+	//userID := c.Value("userID").(int)
+	//listID := c.Param("id")
+	fmt.Println("delete todo element")
+	elemID := c.Param("elemid")
+
+	elemIDInt, err := strconv.Atoi(elemID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.services.TodoElement.Delete(elemIDInt)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"ID": "ok"})
 }
 
 func (h *Handler) updateTodoElement(c *gin.Context) {

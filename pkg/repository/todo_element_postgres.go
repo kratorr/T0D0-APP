@@ -1,9 +1,11 @@
 package repository
 
 import (
-	"todo/models"
-
+	"context"
+	"fmt"
 	"github.com/jackc/pgx/v4"
+	"go.uber.org/zap"
+	"todo/models"
 )
 
 type TodoElementPostgres struct {
@@ -15,13 +17,57 @@ func NewTodoElementPostgres(db *pgx.Conn) *TodoElementPostgres {
 }
 
 func (r *TodoElementPostgres) Create(userID int, input models.TodoElement) (int, error) {
-	return 0, nil
+	var todoElementId int
+	query := `INSERT INTO todo_element (todo_list_id, title) VALUES($1, $2) RETURNING id;;`
+	err := r.db.QueryRow(context.Background(), query, input.TodoListID, input.Title).Scan(&todoElementId)
+	if err != nil {
+
+		zap.L().Sugar().Error(err.Error())
+		return todoElementId, err
+	}
+
+	return todoElementId, nil
 }
 
-func (r *TodoElementPostgres) Delete(userID, listID int) error {
+func (r *TodoElementPostgres) Delete(elementID int) error {
+	query := `DELETE FROM todo_element WHERE id = $1;;`
+	_, err := r.db.Exec(context.Background(), query, elementID)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+		return err
+	}
+
 	return nil
 }
 
-func (r *TodoElementPostgres) GetAll(userID, listID int) error {
+func (r *TodoElementPostgres) Update(elementID int, input models.TodoElement) error {
+	query := `UPDATE todo_element SET title = $1 WHERE id = $3`
+	_, err := r.db.Exec(context.Background(), query, input.Title)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+		return err
+	}
 	return nil
+}
+
+func (r *TodoElementPostgres) GetAllByListID(listID int) ([]models.TodoElement, error) {
+	result := make([]models.TodoElement, 0)
+
+	query := `SELECT id, todo_list_id, title, state_id FROM todo_elemnt WHERE id = $1;`
+	rows, err := r.db.Query(context.Background(), query, userID)
+	if err != nil {
+		zap.L().Sugar().Error(err.Error())
+		return result, err
+	}
+
+	for rows.Next() {
+		todoElemnt := models.TodoElement{}
+		err := rows.Scan(&todoList.ID, &todoList.UserID, &todoList.Title, &todoList.Description)
+		if err != nil {
+			fmt.Println(err)
+		}
+		result = append(result, todoList)
+	}
+
+	return result, nil
 }

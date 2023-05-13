@@ -24,10 +24,9 @@ type TodoList interface {
 
 type TodoElement interface {
 	Create(userID int, input models.TodoElement) (int, error)
-	Delete(userID, listID int) error
-	// Update(userID, listID int, input models.TodoList) error
-	// GetByID(userID int, listID int) (models.TodoList, error)
-	// GetAll(userID int) ([]models.TodoList, error)
+	Delete(elementID int) error
+	Update(elementID int, input models.TodoElement) error
+	GetAllByListID(listID int) ([]models.TodoElement, error)
 }
 
 type Repository struct {
