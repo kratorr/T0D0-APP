@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"todo/models"
-	"todo/pkg/service"
 	"todo/pkg/service/mock"
 
 	"github.com/gin-gonic/gin"
@@ -59,10 +58,10 @@ func TestSignUpUser(t *testing.T) {
 
 			rr := httptest.NewRecorder()
 
-			services := &service.Service{mockAuthService}
-			handlers := NewHandler(services)
+			//	services := &service.Service{mockAuthService}
+			//	handlers := NewHandler(services)
 
-			handlers.InitRoutes(router)
+			//	handlers.InitRoutes(router)
 
 			if tcase.beforeTest != nil {
 				tcase.beforeTest(mockAuthService)

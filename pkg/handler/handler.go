@@ -6,8 +6,6 @@ import (
 	_ "todo/docs"
 
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 type Handler struct {
@@ -28,7 +26,6 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		auth.POST("/signup", h.SignUp)
 		auth.POST("/signin", h.SignIn)
 		auth.GET("/me", h.UserIdentification, h.Me)
-		// auth.POST("/signout", h.SignOut)
 	}
 	api := g.Group("/api/v1")
 
@@ -56,9 +53,7 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		// todoElement.PUT("/:id", h.updateTodoElement)
 	}
 
-	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return g
 }
-
-//{"todoll_list":5 , "titl": "go to shop"}

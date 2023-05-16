@@ -14,7 +14,7 @@ README в процессе написания.
 - [x]  Миддлваря для получения пользователя
 - [ ]  HTTP хендлер с заглушками
 - [x]  Сервис аутентификации (Создать пользователя, Аутентифицировать)
-- [ ]  Сервис аутентификации (Аутентифицировать), переделать на JWT или нормальный Bearer Token 
+- [x]  Сервис аутентификации (Аутентифицировать), переделать на JWT или нормальный Bearer Token 
 - [ ]  Тесты
 - [ ]  Сервис TODO list, методы (Создать, Удалить, Изменить)  СПИСКИ
 - [ ]  Тесты [https://quii.gitbook.io/learn-go-with-tests/questions-and-answers/http-handlers-revisited](https://quii.gitbook.io/learn-go-with-tests/questions-and-answers/http-handlers-revisited)

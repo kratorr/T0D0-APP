@@ -35,7 +35,6 @@ func (h *Handler) createTodoElement(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"ID": todoElementID})
-
 }
 
 func (h *Handler) getTodoElement(c *gin.Context) {
@@ -43,8 +42,8 @@ func (h *Handler) getTodoElement(c *gin.Context) {
 }
 
 func (h *Handler) deleteTodoElement(c *gin.Context) {
-	//userID := c.Value("userID").(int)
-	//listID := c.Param("id")
+	// userID := c.Value("userID").(int)
+	// listID := c.Param("id")
 	fmt.Println("delete todo element")
 	elemID := c.Param("elemid")
 

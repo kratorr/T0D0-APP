@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -18,8 +17,11 @@ func (h *Handler) UserIdentification(c *gin.Context) {
 
 	splitedHeader := strings.Split(authHeader, " ")
 	if len(splitedHeader) <= 1 {
-		fmt.Println("auth header too short")
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "auth header invalid"})
 		return
+	}
+	if splitedHeader[0] != "Bearer" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "auth header invalid"})
 	}
 	token := splitedHeader[1]
 
@@ -31,6 +33,6 @@ func (h *Handler) UserIdentification(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "jwt parse error"})
 	}
 
-	c.Set("userID", claims["sub"])
+	c.Set("userID", int(claims["sub"].(float64)))
 	c.Set("userLogin", claims["nickname"])
 }

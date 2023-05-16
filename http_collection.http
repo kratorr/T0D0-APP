@@ -12,14 +12,14 @@ content-type: application/json
 POST http://localhost:8085/auth/signin/
 
 {
-    "login": "VsTHeO",
+    "login": "hgf",
     "password": "123"
 }
 
 ###
 
 GET http://localhost:8085/api/v1/test/
-Authorization: BtJcTrcoPvkZyGkPkLwisSRcdQVYvGrqrkJfLFOT
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1MzA5NzUsIm5pY2tuYW1lIjoiaGdmIiwic3ViIjoxMzN9.vpt1a7ZOFkMoU8o4aq3_creIYN5XeBIsmvvsNxID8PM
 
 ###
 
@@ -30,7 +30,7 @@ GET http://localhost:8085/api/v1/test/
 ###
 
 POST http://localhost:8085/api/v1/todo_list/
-Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1MzA5NzUsIm5pY2tuYW1lIjoiaGdmIiwic3ViIjoxMzN9.vpt1a7ZOFkMoU8o4aq3_creIYN5XeBIsmvvsNxID8PM
 content-type: application/json
 
 {

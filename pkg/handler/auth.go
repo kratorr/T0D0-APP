@@ -55,5 +55,3 @@ func (h *Handler) Me(c *gin.Context) {
 	fmt.Println(userLogin)
 	c.JSON(200, gin.H{"userID": userID, "userLogin": userLogin})
 }
-
-// TODO SignOut
