@@ -14,12 +14,11 @@ type Auth interface {
 }
 
 type TodoList interface {
-	Create(userID int, input models.TodoList) (int, error)
-	Delete(userID, listID int) error
+	Create(userID int, input models.CreateTodoListDTO) (int, error)
+	Delete(listID int) error
 	Update(userID, listID int, input models.TodoList) error
-	GetByID(userID int, listID int) (models.TodoList, error)
+	GetByID(userID, listID int) (models.TodoList, error)
 	GetAll(userID int) ([]models.TodoList, error)
-	GetOwnerID(listID int) (int, error)
 }
 
 type TodoElement interface {

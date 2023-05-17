@@ -2,7 +2,7 @@ POST http://localhost:8085/auth/signup/
 content-type: application/json
 
 {
-    "login": "hgf",
+    "login": "D4SuCE_",
     "password": "123",
     "password_repeat": "123"
 }
@@ -12,36 +12,26 @@ content-type: application/json
 POST http://localhost:8085/auth/signin/
 
 {
-    "login": "hgf",
+    "login": "D4SuCE_",
     "password": "123"
 }
 
 ###
 
-GET http://localhost:8085/api/v1/test/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1MzA5NzUsIm5pY2tuYW1lIjoiaGdmIiwic3ViIjoxMzN9.vpt1a7ZOFkMoU8o4aq3_creIYN5XeBIsmvvsNxID8PM
-
-###
-
-GET http://localhost:8085/api/v1/test/
-
-# GET http://localhost:8082/items
-
-###
-
 POST http://localhost:8085/api/v1/todo_list/
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1MzA5NzUsIm5pY2tuYW1lIjoiaGdmIiwic3ViIjoxMzN9.vpt1a7ZOFkMoU8o4aq3_creIYN5XeBIsmvvsNxID8PM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1NjgyOTQsIm5pY2tuYW1lIjoiRDRTdUNFXyIsInN1YiI6Mn0.NzTYBCN_g6Jq5a1o_Dnc0CmmzLHrLvxJAtpZoEBrsEI
 content-type: application/json
 
 {
-    "title": "TEST2",
-    "description": "TEST2"
+    "title": "first todo list D4SuCE_",
+    "description": "firs test todo list"
 }
+
 
 ###
 
-DELETE http://localhost:8085/api/v1/todo_list/5
-Authorization: gvPQEohExMfHmgVhkaUTvrdWxJVbuDyCYqlsNayk
+DELETE http://localhost:8085/api/v1/todo_list/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODQ1NjgyOTQsIm5pY2tuYW1lIjoiRDRTdUNFXyIsInN1YiI6Mn0.NzTYBCN_g6Jq5a1o_Dnc0CmmzLHrLvxJAtpZoEBrsEI
 content-type: application/json
 
 

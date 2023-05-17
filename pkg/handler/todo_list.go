@@ -14,14 +14,14 @@ import (
 func (h *Handler) createTodoList(c *gin.Context) {
 	userID := c.Value("userID").(int)
 
-	inputData := models.TodoList{}
-	err := c.ShouldBindJSON(&inputData)
+	todoListDto := models.CreateTodoListDTO{UserID: userID}
+	err := c.ShouldBindJSON(&todoListDto)
 	if err != nil {
 		zap.L().Sugar().Error(err.Error())
 		return
 	}
-	zap.L().Sugar().Debug("create TODO list ", userID, inputData)
-	todoListID, err := h.services.TodoList.Create(userID, inputData)
+	zap.L().Sugar().Debug("create TODO list ", userID, todoListDto)
+	todoListID, err := h.services.TodoList.Create(userID, todoListDto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -39,11 +39,6 @@ func (h *Handler) deleteTodoList(c *gin.Context) {
 		return
 	}
 
-	if !h.isOwner(c) {
-		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
-		return
-	}
-
 	h.services.TodoList.Delete(userID, listIDInt)
 	c.JSON(http.StatusOK, gin.H{"message": "list deleted"})
 }
@@ -55,11 +50,6 @@ func (h *Handler) getTodoList(c *gin.Context) {
 	listIDInt, err := strconv.Atoi(listID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if !h.isOwner(c) {
-		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
 		return
 	}
 
@@ -82,10 +72,6 @@ func (h *Handler) updateTodoList(c *gin.Context) {
 		return
 	}
 
-	if !h.isOwner(c) {
-		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
-		return
-	}
 	inputData := &models.TodoList{}
 
 	err = c.ShouldBindJSON(&inputData)
@@ -108,22 +94,4 @@ func (h *Handler) getAllTodoLists(c *gin.Context) {
 	}
 	fmt.Println(todoLists)
 	c.JSON(http.StatusOK, todoLists)
-}
-
-func (h *Handler) isOwner(c *gin.Context) bool {
-	userID := c.Value("userID").(int)
-	listID := c.Param("id")
-
-	listIDInt, err := strconv.Atoi(listID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return false
-	}
-
-	ownerID, err := h.services.TodoList.GetOwnerID(listIDInt)
-
-	if ownerID != userID {
-		return false
-	}
-	return true
 }

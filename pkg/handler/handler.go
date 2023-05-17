@@ -40,8 +40,8 @@ func (h *Handler) InitRoutes(g *gin.Engine) *gin.Engine {
 		todoLists.DELETE("/:id", h.deleteTodoList)
 		todoLists.PUT("/:id", h.updateTodoList)
 
-		todoLists.POST(":id/todo", h.createTodoElement) // create todo element
-		todoLists.DELETE(":id/todo/:elemid", h.deleteTodoElement)
+		// todoLists.POST(":id/todo", h.createTodoElement) // create todo element
+		// todoLists.DELETE(":id/todo/:elemid", h.deleteTodoElement)
 	}
 
 	// todoElement := api.Group("/todo")
